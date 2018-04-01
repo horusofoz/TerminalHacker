@@ -8,7 +8,7 @@ public class Hacker : MonoBehaviour {
     enum Screen { MainMenu, Password, GameOver };
     Screen currentScreen;
     int passwordAttemptsRemaining;
-    const int PasswordAttemptsStart = 3;
+    const int PasswordAttemptsStart = 5;
 
     // Passwords
     List<string> level1passwords = new List<string>();
@@ -19,57 +19,67 @@ public class Hacker : MonoBehaviour {
     // Levels
     List<string> levels = new List<string>();
 
-    // Texts
-    string mainMenuStartText;
-    string mainMenuInvalidSelectText;
-
     // Use this for initialization
     void Start ()
     {
         SetGameContent();
-        ShowMainMenu(mainMenuStartText);
+        ShowMainMenu("start");
     }
 
     void SetGameContent()
     {
         //Populate level password lists
         level1passwords.AddRange(new string[] { "history", "science", "fiction", "reference", "dewey" });
-        level2passwords.AddRange(new string[] { "investigation", "jurisdiction", "criminology", "harassment", "identification" });
-        level3passwords.AddRange(new string[] { "luminosity", "aeronautical", "spectrograph", "continuum", "astrometric" });
+        level2passwords.AddRange(new string[] { "investigate", "jurisdiction", "detective", "criminal", "identify" });
+        level3passwords.AddRange(new string[] { "intelligence", "espionage", "communications", "terrorism", "conspiracy" });
 
         // Create level list
-        levels.AddRange(new string[] { "University", "Police Station", "ASIO" });
+        levels.AddRange(new string[] { "University", "Police Station", "ASIO" });        
+    }
 
-        // Main Menu Text
-        mainMenuStartText = "Infiltrator 3000\n" +
-            "\n" +
-            "Available targets:\n" +
-            "\n" +
+    void ShowMainMenu(string status)
+    {
+        string mainMenuStartText = "Infiltrator 3000\n\n" +
+            "Scanning for targets...\n\n" + 
+            "Available targets:\n\n" +
             "1) " + levels[0] + "\n" +
             "2) " + levels[1] + "\n" +
-            "3) " + levels[2] + "\n" +
-            "\n" +
+            "3) " + levels[2] + "\n\n" +
             "Select Target:";
 
-        mainMenuInvalidSelectText = "Infiltrator 3000\n" +
-            "\n" +
-            "Available targets:\n" +
-            "\n" +
+        string mainMenuInvalidSelectText = "Infiltrator 3000\n\n" +
+            "Available targets:\n\n" +
             "1) " + levels[0] + "\n" +
             "2) " + levels[1] + "\n" +
-            "3) " + levels[2] + "\n" +
-            "\n" +
-            "Invalid target selected. Try again.\n" +
-            "\n" +
+            "3) " + levels[2] + "\n\n" +
+            "Invalid target selected. Try again.\n\n" +
             "Select Target:";
 
+        currentScreen = Screen.MainMenu;
+        Terminal.ClearScreen();
+        if(status == "start")
+        {
+            Terminal.WriteLine(mainMenuStartText);
+        }
+        else if( status == "invalid")
+        {
+            Terminal.WriteLine(mainMenuInvalidSelectText);
+        }
+        else
+        {
+            Terminal.WriteLine("Invalid Status");
+        }
     }
 
     void OnUserInput(string input)
     {
-        if (input.ToLower() == "exit")
+        if (input == null)
         {
-            ShowMainMenu(mainMenuStartText);
+            ShowMainMenu("invalid");
+        }
+        else if (input.ToLower() == "exit")
+        {
+            ShowMainMenu("start");
         }
         else if (currentScreen == Screen.MainMenu)
         {
@@ -86,13 +96,6 @@ public class Hacker : MonoBehaviour {
 
     }
 
-    void ShowMainMenu(string input)
-    {
-        currentScreen = Screen.MainMenu;
-        Terminal.ClearScreen();
-        Terminal.WriteLine(input);
-    }
-
     void RunMainMenu(string input)
     {
         if(input == "1" || input == "2" || input == "3")
@@ -101,7 +104,7 @@ public class Hacker : MonoBehaviour {
         }
         else
         {
-            ShowMainMenu(mainMenuInvalidSelectText);
+            ShowMainMenu("invalid");
         }
     }
 
@@ -110,7 +113,12 @@ public class Hacker : MonoBehaviour {
         currentScreen = Screen.Password;
         level = input;
         passwordAttemptsRemaining = PasswordAttemptsStart;
+        SetRandomPassword(input);
+        ShowPasswordScreen();
+    }
 
+    void SetRandomPassword(int input)
+    {
         switch (input)
         {
             case 1:
@@ -126,8 +134,6 @@ public class Hacker : MonoBehaviour {
                 Debug.LogError("Invalid level number");
                 break;
         }
-
-        ShowPasswordScreen();
     }
 
     void ShowPasswordScreen()
@@ -136,11 +142,20 @@ public class Hacker : MonoBehaviour {
 
         Terminal.WriteLine("Target: " + levels[level - 1] + "\n");
 
-        if (passwordAttemptsRemaining < 3)
+        if (passwordAttemptsRemaining < PasswordAttemptsStart)
         {
             Terminal.WriteLine("Password incorrect. Try again.\n");
         }
-        Terminal.WriteLine("Tries Remaining: " + passwordAttemptsRemaining + "\n\nEnter Password");
+        else
+        {
+            Terminal.WriteLine("Type guess and press Enter.\n");
+        }
+
+        Terminal.WriteLine("Tries Remaining: " +
+            passwordAttemptsRemaining +
+            "\n\nType exit back out." +
+            "\n\nPassword Hash: ##" + password.Anagram() + "##" +
+            "\n\nEnter Password:");
     }
 
     void RunPasswordScreen(bool input)
@@ -167,7 +182,7 @@ public class Hacker : MonoBehaviour {
 
     bool CheckPassword(string input)
     {
-        return input == password || input == "007";
+        return input.ToLower() == password || input == "007";
     }
 
     void ShowGameOverScreen(bool result)
@@ -279,7 +294,7 @@ ______ ___  _____ _      ASIO
         if(Input.anyKey)
         {
             currentScreen = Screen.MainMenu;
-            ShowMainMenu(mainMenuStartText);
+            ShowMainMenu("start");
         }
         
     }
