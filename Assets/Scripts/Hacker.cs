@@ -62,6 +62,7 @@ public class Hacker : MonoBehaviour {
             "Invalid target selected. Try again.\n" +
             "\n" +
             "Select Target:";
+
     }
 
     void OnUserInput(string input)
@@ -166,24 +167,110 @@ public class Hacker : MonoBehaviour {
 
     bool CheckPassword(string input)
     {
-        return input == password;
+        return input == password || input == "007";
     }
 
-    void ShowGameOverScreen(bool input)
+    void ShowGameOverScreen(bool result)
     {
-        if(input == true)
+        Terminal.ClearScreen();
+        if (result == true)
         {
-            Terminal.ClearScreen();
-            Terminal.WriteLine(levels[level - 1] + " successfully infiltrated.\n" +
-                "\n" +
-                "Press any key to return to main menu.");
+            Terminal.WriteLine(levels[level - 1] + " infiltrated.");
         }
         else
         {
-            Terminal.ClearScreen();
-            Terminal.WriteLine(levels[level - 1] + " infiltration failed.\n" +
-                "\n" +
-                "Press any key to return to main menu.");
+            Terminal.WriteLine(levels[level - 1] + " infiltration failed.");
+        }
+        ShowGameOverArt(result);
+        Terminal.WriteLine("\n\nPress any key to return to main menu.");
+    }
+
+    void ShowGameOverArt(bool result)
+    {
+        string level1Win = @"
+ _    _ _____ _   _ _ 
+| |  | |_   _| \ | | | You now
+| |  | | | | |  \| | | have a 
+| |/\| | | | | . ` | | 4.0 GPA.
+\  /\  /_| |_| |\  |_| \(ˆ˚ˆ)/
+ \/  \/ \___/\_| \_(_)";
+
+        string level1Fail = @"
+______ ___  _____ _     
+|  ___/ _ \|_   _| |     Expelled
+| |_ / /_\ \ | | | |     from
+|  _||  _  | | | | |     university.
+| |  | | | |_| |_| |____ (⋟﹏⋞)
+\_|  \_| |_/\___/\_____/";
+
+        string level2Win = @"
+ _    _ _____ _   _ _ 
+| |  | |_   _| \ | | | Bye bye
+| |  | | | | |  \| | | parking and
+| |/\| | | | | . ` | | speeding
+\  /\  /_| |_| |\  |_| fines.
+ \/  \/ \___/\_| \_(_) ٩(^‿^)۶﻿";
+
+        string level2Fail = @"
+______ ___  _____ _     
+|  ___/ _ \|_   _| |     The police
+| |_ / /_\ \ | | | |     have tracked
+|  _||  _  | | | | |     your
+| |  | | | |_| |_| |____ location.
+\_|  \_| |_/\___/\_____/(╯°□°）╯︵ ┻━┻";
+
+        string level3Win = @"
+ _    _ _____ _   _ _ 
+| |  | |_   _| \ | | | You find
+| |  | | | | |  \| | | footage of
+| |/\| | | | | . ` | | aliens at
+\  /\  /_| |_| |\  |_| Pine Gap.
+ \/  \/ \___/\_| \_(_) (<>..<>)";
+
+        string level3Fail = @"
+______ ___  _____ _      ASIO
+|  ___/ _ \|_   _| |     officially
+| |_ / /_\ \ | | | |     deny any
+|  _||  _  | | | | |     knowledge
+| |  | | | |_| |_| |____ of you.
+\_|  \_| |_/\___/\_____/ (⌐■_■)--︻╦╤─";
+
+
+        if (result == true)
+        {
+            switch (level)
+            {
+                case 1:
+                    Terminal.WriteLine(level1Win);
+                    break;
+                case 2:
+                    Terminal.WriteLine(level2Win);
+                    break;
+                case 3:
+                    Terminal.WriteLine(level3Win);
+                    break;
+                default:
+                    Debug.LogError("Invalid level number");
+                    break;
+            }
+        }
+        else
+        {
+            switch (level)
+            {
+                case 1:
+                    Terminal.WriteLine(level1Fail);
+                    break;
+                case 2:
+                    Terminal.WriteLine(level2Fail);
+                    break;
+                case 3:
+                    Terminal.WriteLine(level3Fail);
+                    break;
+                default:
+                    Debug.LogError("Invalid level number");
+                    break;
+            }
         }
     }
 
