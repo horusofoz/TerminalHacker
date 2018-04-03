@@ -11,34 +11,23 @@ public class Hacker : MonoBehaviour {
     const int PasswordAttemptsStart = 5;
 
     // Passwords
-    List<string> level1passwords = new List<string>();
-    List<string> level2passwords = new List<string>();
-    List<string> level3passwords = new List<string>();
+    List<string> level1passwords = new List<string>() { "enrolment", "tertiary", "plagiarise", "scholarship", "bachelor" };
+    List<string> level2passwords = new List<string>() { "investigate", "jurisdiction", "detective", "perpetrator", "fingerprints" };
+    List<string> level3passwords = new List<string>() { "intelligence", "reconnaissance", "communications", "surveillance", "cryptography" };
     string password;
 
     // Levels
-    List<string> levels = new List<string>();
+    List<string> levels = new List<string>() { "University", "Police Station", "ASIO" };
 
     // Use this for initialization
     void Start ()
     {
-        SetGameContent();
         ShowMainMenu("start");
-    }
-
-    void SetGameContent()
-    {
-        //Populate level password lists
-        level1passwords.AddRange(new string[] { "history", "science", "fiction", "reference", "dewey" });
-        level2passwords.AddRange(new string[] { "investigate", "jurisdiction", "detective", "criminal", "identify" });
-        level3passwords.AddRange(new string[] { "intelligence", "espionage", "communications", "terrorism", "conspiracy" });
-
-        // Create level list
-        levels.AddRange(new string[] { "University", "Police Station", "ASIO" });        
     }
 
     void ShowMainMenu(string status)
     {
+
         string mainMenuStartText = "Infiltrator 3000\n\n" +
             "Scanning for targets...\n\n" + 
             "Available targets:\n\n" +
@@ -140,20 +129,11 @@ public class Hacker : MonoBehaviour {
     {
         Terminal.ClearScreen();
 
-        Terminal.WriteLine("Target: " + levels[level - 1] + "\n");
-
-        if (passwordAttemptsRemaining < PasswordAttemptsStart)
-        {
-            Terminal.WriteLine("Password incorrect. Try again.\n");
-        }
-        else
-        {
-            Terminal.WriteLine("Type guess and press Enter.\n");
-        }
-
-        Terminal.WriteLine("Tries Remaining: " +
+        Terminal.WriteLine("Infiltrator 3000" +
+            "\n\nTarget: " + levels[level - 1] +
+            "\n\nTries Remaining: " +
             passwordAttemptsRemaining +
-            "\n\nType exit back out." +
+            "\n\nType exit to back out." +
             "\n\nPassword Hash: ##" + password.Anagram() + "##" +
             "\n\nEnter Password:");
     }
@@ -190,60 +170,54 @@ public class Hacker : MonoBehaviour {
         Terminal.ClearScreen();
         if (result == true)
         {
-            Terminal.WriteLine(levels[level - 1] + " infiltrated.");
+            Terminal.WriteLine("Infiltrator 3000\n\n" + levels[level - 1] + " infiltrated.");
         }
         else
         {
-            Terminal.WriteLine(levels[level - 1] + " infiltration failed.");
+            Terminal.WriteLine("Infiltrator 3000\n\n" + levels[level - 1] + " infiltration failed.");
         }
         ShowGameOverArt(result);
-        Terminal.WriteLine("\n\nPress any key to return to main menu.");
+        Terminal.WriteLine("\nPress Enter to return to main menu.");
     }
 
     void ShowGameOverArt(bool result)
     {
-        string level1Win = @"
- _    _ _____ _   _ _ 
+        string level1Win = @" _    _ _____ _   _ _ 
 | |  | |_   _| \ | | | You now
 | |  | | | | |  \| | | have a 
 | |/\| | | | | . ` | | 4.0 GPA.
 \  /\  /_| |_| |\  |_| \(ˆ˚ˆ)/
  \/  \/ \___/\_| \_(_)";
 
-        string level1Fail = @"
-______ ___  _____ _     
+        string level1Fail = @"______ ___  _____ _     
 |  ___/ _ \|_   _| |     Expelled
 | |_ / /_\ \ | | | |     from
 |  _||  _  | | | | |     university.
 | |  | | | |_| |_| |____ (-_-;)
 \_|  \_| |_/\___/\_____/";
 
-        string level2Win = @"
- _    _ _____ _   _ _ 
+        string level2Win = @" _    _ _____ _   _ _ 
 | |  | |_   _| \ | | | Bye bye
 | |  | | | | |  \| | | parking and
 | |/\| | | | | . ` | | speeding
 \  /\  /_| |_| |\  |_| fines.
  \/  \/ \___/\_| \_(_) \(^-^)/";
 
-        string level2Fail = @"
-______ ___  _____ _     
+        string level2Fail = @"______ ___  _____ _     
 |  ___/ _ \|_   _| |     The police
 | |_ / /_\ \ | | | |     have tracked
 |  _||  _  | | | | |     your
 | |  | | | |_| |_| |____ location.
 \_|  \_| |_/\___/\_____/ (╯°□°)╯";
 
-        string level3Win = @"
- _    _ _____ _   _ _ 
+        string level3Win = @" _    _ _____ _   _ _ 
 | |  | |_   _| \ | | | You find
 | |  | | | | |  \| | | footage of
 | |/\| | | | | . ` | | aliens at
 \  /\  /_| |_| |\  |_| Pine Gap.
  \/  \/ \___/\_| \_(_) (<>..<>)";
 
-        string level3Fail = @"
-______ ___  _____ _      ASIO
+        string level3Fail = @"______ ___  _____ _      ASIO
 |  ___/ _ \|_   _| |     officially
 | |_ / /_\ \ | | | |     deny any
 |  _||  _  | | | | |     knowledge
@@ -291,9 +265,8 @@ ______ ___  _____ _      ASIO
 
     void RunGameOverScreen()
     {
-        if(Input.anyKey)
+        if(Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter))
         {
-            currentScreen = Screen.MainMenu;
             ShowMainMenu("start");
         }
         
